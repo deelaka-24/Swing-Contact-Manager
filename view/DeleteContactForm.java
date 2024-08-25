@@ -2,6 +2,9 @@ package view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import controller.ContactController;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -59,35 +62,44 @@ class DeleteContactForm extends JFrame {
 
         add("North", titlePanel);
 
-        // west panel
-        JPanel txtLabelPanel = new JPanel(new GridLayout(6, 1));
-        txtLabelPanel.setBorder(new EmptyBorder(0, 50, 0, 0));
+        // Unified Panel with GridLayout(6, 2)
+        JPanel unifiedPanel = new JPanel(new GridLayout(6, 2));
+        unifiedPanel.setBorder(new EmptyBorder(10, 60, 10, 20));
 
-        lblContactId = new JLabel("Contact ID");
-        lblName = new JLabel("Name");
-        lblContactNumber = new JLabel("Contact Number");
-        lblCompany = new JLabel("Company");
-        lblSalary = new JLabel("Salary");
-        lblBirthday = new JLabel("Birthday");
+        lblContactId = new JLabel("Contact ID:");
+        lblName = new JLabel("Name:");
+        lblContactNumber = new JLabel("Contact Number:");
+        lblCompany = new JLabel("Company:");
+        lblSalary = new JLabel("Salary:");
+        lblBirthday = new JLabel("Birthday:");
+
+        displayLblContactId = new JLabel();
+        displayLblName = new JLabel();
+        displayLblContactNumber = new JLabel();
+        displayLblCompany = new JLabel();
+        displayLblSalary = new JLabel();
+        displayLblBirthday = new JLabel();
 
         JLabel[] labels = { lblContactId, lblName, lblContactNumber, lblCompany, lblSalary, lblBirthday };
+        JLabel[] displayLabels = { displayLblContactId, displayLblName, displayLblContactNumber, displayLblCompany,
+                displayLblSalary, displayLblBirthday };
 
-        for (JLabel label : labels) {
-            label.setFont(new Font("SansSerif", Font.BOLD, 15));
-            JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            labelPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-            labelPanel.add(label);
-            txtLabelPanel.add(labelPanel);
+        for (int i = 0; i < labels.length; i++) {
+            labels[i].setFont(new Font("SansSerif", Font.BOLD, 18));
+            displayLabels[i].setFont(new Font("SansSerif", Font.PLAIN, 18));
+            unifiedPanel.add(labels[i]);
+            unifiedPanel.add(displayLabels[i]);
         }
-        add("West", txtLabelPanel);
 
-        // buttons
+        add("Center", unifiedPanel);
+
+        // Buttons
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
         buttonPanel.setBorder(new EmptyBorder(20, 0, 20, 10));
 
         JPanel firstRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        // Add Contact Button
+        // Delete Button
         btnDelete = new JButton("DELETE");
         firstRow.add(btnDelete);
         // Cancel Button
@@ -96,8 +108,7 @@ class DeleteContactForm extends JFrame {
 
         buttonPanel.add(firstRow);
 
-        // Back to Home Page Btn
-
+        // Back to Home Page Button
         JPanel secondRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         btnBack = new JButton("Back to Home Page");
@@ -107,6 +118,31 @@ class DeleteContactForm extends JFrame {
 
         add("South", buttonPanel);
 
+        btnSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String searchKey = searchTxtField.getText();
+                int index = ContactController.search(searchKey);
+                if (index != -1 && !searchKey.isEmpty()) {
+                    displayLblContactId.setText(ContactController.getContactID(index));
+                    displayLblName.setText(ContactController.getName(index));
+                    displayLblContactNumber.setText(ContactController.getPhoneNumber(index));
+                    displayLblCompany.setText(ContactController.getCompanyName(index));
+                    displayLblSalary.setText(String.valueOf(ContactController.getSalary(index)));
+                    displayLblBirthday.setText(ContactController.getBirthday(index));
+                } else {
+                    JOptionPane.showMessageDialog(null, "No Contact Found !");
+                }
+            }
+        });
+
+        btnDelete.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                int index = ContactController.search(searchTxtField.getText());
+                ContactController.remove(index);
+                JOptionPane.showMessageDialog(null, "Successfully Deleted !");
+            }
+        });
+
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 new HomePage().setVisible(true);
@@ -114,4 +150,5 @@ class DeleteContactForm extends JFrame {
             }
         });
     }
+
 }

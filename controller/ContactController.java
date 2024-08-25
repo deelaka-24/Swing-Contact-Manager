@@ -68,6 +68,10 @@ public class ContactController {
         return ContactDBConnection.list.search(nameOrPhone);
     }
 
+    public static String getContactID(int index) {
+        return ContactDBConnection.list.getId(index);
+    }
+
     public static String getName(int index) {
         return ContactDBConnection.list.getName(index);
     }
@@ -106,6 +110,10 @@ public class ContactController {
 
     public static void setBirthDay(int index, String birthday) {
         ContactDBConnection.list.updateName(index, birthday);
+    }
+
+    public static void remove(int index) {
+        ContactDBConnection.list.remove(index);
     }
 
     public static Contact[] nameSort() {

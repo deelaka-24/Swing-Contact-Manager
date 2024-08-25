@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class ListByName extends JFrame {
+public class ListByName extends JFrame {
     private JLabel lblTitle;
     private JTable tblListByName;
     private JButton btnBack;

@@ -119,7 +119,6 @@ class UpdateContactForm extends JFrame {
             public void actionPerformed(ActionEvent evt) {
                 String searchKey = searchTxtField.getText();
                 int index = ContactController.search(searchKey);
-                System.out.println("Search Key: " + searchKey + ", Found Index: " + index); // Debugging line
                 if (index != -1 && !searchKey.isEmpty()) {
                     displayLblName.setText(ContactController.getName(index));
                     displayLblContactNumber.setText(ContactController.getPhoneNumber(index));
