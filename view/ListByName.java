@@ -1,7 +1,12 @@
 package view;
 
+import model.Contact;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import controller.ContactController;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,24 +35,31 @@ class ListByName extends JFrame {
         add("North", titlePanel);
 
         // Table and scroll pane
-        String[] columnNames = { "Contact ID", "Name", "Contact Number", "Company", "Salary", "Birthday" };
-        Object[][] data = {
-                { "1", "John Doe", "123-456-7890", "Company A", "$50,000", "01/01/1980" },
-                { "2", "Jane Smith", "098-765-4321", "Company B", "$60,000", "02/02/1990" },
-        };
+        Contact[] contactArray = ContactController.nameSort();
+
+        String[] columnNames = { "ID", "Name", "Phone", "Company", "Salary", "Birthday" };
+        Object[][] data = new Object[contactArray.length][columnNames.length];
+
+        for (int i = 0; i < contactArray.length; i++) {
+            Contact contact = contactArray[i];
+            data[i][0] = contact.getId();
+            data[i][1] = contact.getName();
+            data[i][2] = contact.getPhoneNumber();
+            data[i][3] = contact.getCompanyName();
+            data[i][4] = contact.getSalary();
+            data[i][5] = contact.getBirthday();
+        }
 
         tblListByName = new JTable(data, columnNames);
         JScrollPane scrollPane = new JScrollPane(tblListByName);
         tblListByName.setFillsViewportHeight(true);
 
-        // Wrap the scroll pane in a panel with padding
         JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // Adds padding to the left and right
+        tablePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
         add("Center", tablePanel);
 
-        // Button panel
         JPanel buttonPanel = new JPanel(new GridLayout(1, 1));
         buttonPanel.setBorder(new EmptyBorder(20, 0, 20, 10));
 

@@ -1,7 +1,12 @@
 package view;
 
+import model.Contact;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import controller.ContactController;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,11 +35,20 @@ class ListByBirthDay extends JFrame {
         add("North", titlePanel);
 
         // Table and scroll pane
+        Contact[] contactArray = ContactController.birthdaySort();
+
         String[] columnNames = { "Contact ID", "Name", "Contact Number", "Company", "Salary", "Birthday" };
-        Object[][] data = {
-                { "1", "John Doe", "123-456-7890", "Company A", "$50,000", "01/01/1980" },
-                { "2", "Jane Smith", "098-765-4321", "Company B", "$60,000", "02/02/1990" },
-        };
+        Object[][] data = new Object[contactArray.length][columnNames.length];
+
+        for (int i = 0; i < contactArray.length; i++) {
+            Contact contact = contactArray[i];
+            data[i][0] = contact.getId();
+            data[i][1] = contact.getName();
+            data[i][2] = contact.getPhoneNumber();
+            data[i][3] = contact.getCompanyName();
+            data[i][4] = contact.getSalary();
+            data[i][5] = contact.getBirthday();
+        }
 
         tblListByBirthDay = new JTable(data, columnNames);
         JScrollPane scrollPane = new JScrollPane(tblListByBirthDay);

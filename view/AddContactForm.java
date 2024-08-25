@@ -1,5 +1,9 @@
 package view;
 
+import model.Contact;
+import model.ContactDBConnection;
+import controller.ContactController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -41,7 +45,8 @@ class AddContactForm extends JFrame {
         txtTitlePanel.add(lblTitle);
         titlePanel.add(txtTitlePanel);
 
-        lblContactId = new JLabel("Contact ID - B0001");
+        String contactId = ContactController.generateNextContactId();
+        lblContactId = new JLabel("Contact ID - " + contactId);
         lblContactId.setHorizontalAlignment(JLabel.LEFT);
         lblContactId.setFont(new Font("SansSerif", Font.BOLD, 20));
         JPanel txtContactIdPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -117,12 +122,35 @@ class AddContactForm extends JFrame {
 
         btnAddContact.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
+                String id = contactId;
                 String name = txtName.getText();
                 String contactNumber = txtContactNumber.getText();
                 String company = txtCompany.getText();
-                String salary = txtSalary.getText();
+                double salary = Double.parseDouble(txtSalary.getText());
                 String birthday = txtBirthday.getText();
-                JOptionPane.showMessageDialog(null, "Contact added successfully!");
+
+                if (!ContactController.phoneNumberValidating(contactNumber)) {
+                    JOptionPane.showMessageDialog(null, "Invalid Phone Number !!");
+                } else if (!ContactController.salaryValidating(salary)) {
+                    JOptionPane.showMessageDialog(null, "Invalid Salary !!");
+                } else if (!ContactController.validateBirthday(birthday)) {
+                    JOptionPane.showMessageDialog(null, "Invalid Birthday !!");
+                } else {
+                    Contact contact = new Contact(id, name, contactNumber, company, salary, birthday);
+                    boolean added = ContactController.addContact(contact);
+                    if (added) {
+                        JOptionPane.showMessageDialog(null, "Contact added successfully!");
+
+                        // Optionally clear the text fields after adding a contact
+                        txtName.setText("");
+                        txtContactNumber.setText("");
+                        txtCompany.setText("");
+                        txtSalary.setText("");
+                        txtBirthday.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add contact!");
+                    }
+                }
             }
         });
 
