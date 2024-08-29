@@ -141,12 +141,14 @@ class AddContactForm extends JFrame {
                     if (added) {
                         JOptionPane.showMessageDialog(null, "Contact added successfully!");
 
-                        // Optionally clear the text fields after adding a contact
                         txtName.setText("");
                         txtContactNumber.setText("");
                         txtCompany.setText("");
                         txtSalary.setText("");
                         txtBirthday.setText("");
+
+                        String contactId = ContactController.generateNextContactId();
+                        lblContactId.setText("Contact ID - " + contactId);
                     } else {
                         JOptionPane.showMessageDialog(null, "Failed to add contact!");
                     }
